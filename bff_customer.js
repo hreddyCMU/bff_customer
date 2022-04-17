@@ -1,4 +1,4 @@
-// Import mysql for database connections and express for Hosting 
+// Import mysql for database connections and express for Hosting
 const mysql  = require("mysql");
 const express = require("express");
 const app = express();
@@ -41,16 +41,14 @@ const isValidJWTandUserAgent = (req,res) => {
     let base64Url = req.headers.authorization.split('.')[1]; // token you get
     let base64 = base64Url.replace('-', '+').replace('_', '/');
     let decodedData = JSON.parse(Buffer.from(base64, 'base64').toString('binary'));
-
-
-    if(decodedData["sub"] === undefined || decodedData["exp"] === undefined || decodedData["iss"] === undefined){
+ if(decodedData["sub"] === undefined || decodedData["exp"] === undefined || decodedData["$
         res.status(401).json({
             statusCode: 401,
             message : "Invalid JWT token detected"
         });
         return false;
     }
-    else if(decodedData["sub"] !== undefined && !(decodedData["sub"] === "starlord" || decodedData["sub"] === "gamora" || decodedData["sub"] === "drax" || decodedData["sub"] === "rocket" || decodedData["sub"] === "groot" )){
+    else if(decodedData["sub"] !== undefined && !(decodedData["sub"] === "starlord" || decod$
         res.status(401).json({
             statusCode: 401,
             message : "Invalid JWT token detected"
@@ -64,8 +62,8 @@ const isValidJWTandUserAgent = (req,res) => {
         });
         return false;
     }
- 
-    
+
+
     else if(decodedData["exp"] !== undefined && dateNow > Date(decodedData["exp"])){
         res.status(401).json({
             statusCode: 401,
@@ -79,32 +77,31 @@ const isValidJWTandUserAgent = (req,res) => {
     return true;
   };
 
-
-
-
-//=================================API end point for adding a customer to customer table===========================
+//=================================API end point for adding a customer to customer table====$
 app.post("/customers",(req,res) =>{
     if(isValidJWTandUserAgent(req,res)){
-        axios.post('http://localhost:3000/customers', req.body)
+        axios.post('http://3.224.154.151:3000/customers', req.body)
           .then(function (response) {
-            res.status(response.data.statusCode).json({
+            res.status(response.status).json({
                 ...response.data
             });
           })
           .catch(function (error) {
-            console.log(error);
+            if(error){
+                res.status(error.response.status).json({
+                        ...error.response.data
+                } );
+            }
           });
-        
+
     }
 });
-
-
 
 app.get('/customers/:id',(req,res) =>{
     if(isValidJWTandUserAgent(req,res)){
 
 
-          axios.get(`http://localhost:3000/customers/${req.params.id}`, {
+          axios.get(`http://3.224.154.151:3000/customers/${req.params.id}`, {
             params: {
             }
           })
@@ -124,23 +121,22 @@ app.get('/customers/:id',(req,res) =>{
             }
           })
           .catch(function (error) {
-            res.status(500).json({
-                "message":"Server error!"
+            res.status(error.response.status).json({
+                ...error.response.data
             });
           })
           .then(function () {
             // always executed
             console.log("Done!");
-          });  
+          });
     }
 });
 
-
-//=================================API end point for retrieving a customer from customer table based on userid===========================
+//=================================API end point for retrieving a customer from customer tab$
 app.get('/customers',(req,res) =>{
     if(isValidJWTandUserAgent(req,res)){
 
-          axios.get(`http://localhost:3000/customers?userId=${req.query.userId}`)
+          axios.get(`http://3.224.154.151:3000/customers?userId=${req.query.userId}`)
                 .then(function (response) {
                     // handle success\
                     if(isUserAgentMobile){
@@ -159,9 +155,9 @@ app.get('/customers',(req,res) =>{
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
-                    res.status(500).json({
-                        "message":"Server errorfrom userid!"
+
+                    res.status(error.response.status).json({
+                        ...error.response.data
                     });
                 })
                 .then(function () {
@@ -171,12 +167,12 @@ app.get('/customers',(req,res) =>{
     }
 });
 
-//=================================API end point for retrieving all customers from customer table===========================
+//=================================API end point for retrieving all customers from customer $
 app.get('/customerall',(req,res) =>{
     let sql = `SELECT * FROM customers `;
-    
+
     if(isValidJWTandUserAgent(req,res)){
-        request("http://localhost:3000/customerall", { json: true }, (err, res, body) => {
+        request("http://3.224.154.151:3000/customerall", { json: true }, (err, res, body) =>$
             if (err) {
                 console.log("Error detected");
             }
@@ -185,10 +181,17 @@ app.get('/customerall',(req,res) =>{
     }
 });
 
+app.get("/status",(req,res) => {
+    res.set('content-type', 'text/plain');
+    res.send('OK');
+    });
+
 
 app.listen('80', () => {
     console.log("BFF customer service up on Port 80");
 });
+
+
 
 
 
