@@ -3,6 +3,7 @@ const mysql  = require("mysql");
 const express = require("express");
 const app = express();
 var axios = require('axios');
+const { exec } = require("child_process");
 
 
 //Import body parser to parse requests of API endpoints
@@ -82,6 +83,17 @@ app.post("/customers",(req,res) =>{
     if(isValidJWTandUserAgent(req,res)){
         axios.post('http://3.224.154.151:3000/customers', req.body)
           .then(function (response) {
+            exec("pwd", (error, stdout, stderr) => {
+                    if (error) {
+                        console.log(`error: ${error.message}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.log(`stderr: ${stderr}`);
+                        return;
+                    }
+                    console.log(`stdout: ${stdout}`);
+                });
             res.status(response.status).json({
                 ...response.data
             });
