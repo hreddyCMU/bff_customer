@@ -41,7 +41,7 @@ const isValidJWTandUserAgent = (req,res) => {
     let base64Url = req.headers.authorization.split('.')[1]; // token you get
     let base64 = base64Url.replace('-', '+').replace('_', '/');
     let decodedData = JSON.parse(Buffer.from(base64, 'base64').toString('binary'));
- if(decodedData["sub"] === undefined || decodedData["exp"] === undefined || decodedData["$
+ if(decodedData["sub"] === undefined || decodedData["exp"] === undefined || decodedData["iss"] === undefined){
         res.status(401).json({
             statusCode: 401,
             message : "Invalid JWT token detected"
@@ -172,7 +172,7 @@ app.get('/customerall',(req,res) =>{
     let sql = `SELECT * FROM customers `;
 
     if(isValidJWTandUserAgent(req,res)){
-        request("http://3.224.154.151:3000/customerall", { json: true }, (err, res, body) =>$
+        request("http://3.224.154.151:3000/customerall", { json: true }, (err, res, body) =>{
             if (err) {
                 console.log("Error detected");
             }
