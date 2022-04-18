@@ -3,7 +3,7 @@ const mysql  = require("mysql");
 const express = require("express");
 const app = express();
 var axios = require('axios');
-const { exec } = require("child_process");
+const { Kafka } = require('kafkajs')
 
 
 //Import body parser to parse requests of API endpoints
@@ -15,6 +15,40 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let isUserAgentMobile = false;
+
+const kafka = new Kafka({
+    clientId: 'my-app',
+    brokers: ['b-2.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092', 'b-1.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092','b-3.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092'],
+    ssl: false
+  });
+
+
+app.get('/msg',async(req,res) =>  {
+
+    const producer = kafka.producer()
+
+     await producer.connect()
+     await producer.send({
+    topic: 'MSKTutorialTopic',
+    messages: "hiiiiiii-9090"
+    });
+
+    const consumer = kafka.consumer()
+
+     await consumer.connect()
+     await consumer.subscribe({ topic: 'MSKTutorialTopic', fromBeginning: true })
+    
+     await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        console.log({
+          value: message
+        })
+      },
+    });
+    
+    res.send("helo hari! BFF for customer is up and revedd from kafka")
+
+});
 
 
 app.get('/',(req,res) =>  res.send("helo hari! BFF for customer is up"));
