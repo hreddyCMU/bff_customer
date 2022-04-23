@@ -79,7 +79,7 @@ const isValidJWTandUserAgent = (req,res) => {
         });
         return false;
     }
-    else if(decodedData["sub"] !== undefined && !(decodedData["sub"] === "starlord" || decodedData["sub"] === "gamora" || decodedData["sub"] === "drax" || decodedData["sub"] === "rocket" |$
+    else if(decodedData["sub"] !== undefined && !(decodedData["sub"] === "starlord" || decodedData["sub"] === "gamora" || decodedData["sub"] === "drax" || decodedData["sub"] === "rocket" || decodedData["sub"] === "groot" )){
         res.status(401).json({
             statusCode: 401,
             message : "Invalid JWT token detected"
