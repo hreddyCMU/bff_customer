@@ -17,7 +17,7 @@ let isUserAgentMobile = false;
 
 const kafka = new Kafka({
     clientId: 'my-app',
-    brokers: ['b-2.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092', 'b-1.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092','b-3.customer.1awnnt.c6.kafka.us-east-2.amazonaws.com:9092'],
+    brokers: ['b-2.msktutorialcluster.ggwq42.c23.kafka.us-east-1.amazonaws.com:9092', 'b-1.msktutorialcluster.ggwq42.c23.kafka.us-east-1.amazonaws.com:9092','b-3.msktutorialcluster.ggwq42.c23.kafka.us-east-1.amazonaws.com:9092'],
     ssl: false
   })
 
